@@ -17,7 +17,7 @@ class BookModel {
   var dateCompleted: Date
   var summary: String
   var rating: Int?
-  var status: Status
+  var status: Status.RawValue
   
   init(
     title: String,
@@ -36,17 +36,19 @@ class BookModel {
     self.dateCompleted = dateCompleted
     self.summary = summary
     self.rating = rating
-    self.status = status
+    self.status = status.rawValue
   }
   
   var icon: Image {
-    switch status {
+    switch Status(rawValue: status) {
     case .onShelf:
       Image(systemName: "books.vertical")
     case .inProgress:
       Image(systemName: "book")
     case .completed:
       Image(systemName: "book.closed")
+    case .none:
+      Image(systemName: "questionmark")
     }
   }
 }

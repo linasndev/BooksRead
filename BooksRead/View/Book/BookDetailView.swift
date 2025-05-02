@@ -117,7 +117,7 @@ struct BookDetailView: View {
     .padding()
     .textFieldStyle(.roundedBorder)
     .onAppear(perform: {
-      status = book.status
+      status = Status(rawValue: book.status) ?? Status.onShelf
       rating = book.rating ?? 0
       title = book.title
       author = book.author
@@ -132,7 +132,7 @@ struct BookDetailView: View {
       ToolbarItem(placement: .topBarTrailing) {
         if changed {
           Button("Update") {
-            book.status = status
+            book.status = status.rawValue
             book.rating = rating
             book.title = title
             book.author = author
@@ -150,7 +150,7 @@ struct BookDetailView: View {
   
   var changed: Bool {
     //ctrl + shift + click for choose each line
-    status != book.status
+    status != Status(rawValue: book.status)
     || rating != book.rating ?? 0
     || title != book.title
     || author != book.author

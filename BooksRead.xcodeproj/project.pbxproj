@@ -17,6 +17,7 @@
 		B023ACBF2DC3EC5E008049FA /* SampleBooks.swift in Sources */ = {isa = PBXBuildFile; fileRef = B023ACBE2DC3EC5E008049FA /* SampleBooks.swift */; };
 		B023ACC12DC3ED4B008049FA /* PreviewContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = B023ACC02DC3ED4B008049FA /* PreviewContainer.swift */; };
 		B08A41462DC2B89F00CCE664 /* BookDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B08A41452DC2B89F00CCE664 /* BookDetailView.swift */; };
+		B0A9521D2DC521680079D3BC /* BookList.swift in Sources */ = {isa = PBXBuildFile; fileRef = B0A9521C2DC521680079D3BC /* BookList.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -31,6 +32,7 @@
 		B023ACBE2DC3EC5E008049FA /* SampleBooks.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SampleBooks.swift; sourceTree = "<group>"; };
 		B023ACC02DC3ED4B008049FA /* PreviewContainer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PreviewContainer.swift; sourceTree = "<group>"; };
 		B08A41452DC2B89F00CCE664 /* BookDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BookDetailView.swift; sourceTree = "<group>"; };
+		B0A9521C2DC521680079D3BC /* BookList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BookList.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -127,6 +129,7 @@
 			isa = PBXGroup;
 			children = (
 				B01C65FD2DC13E34003BA5DB /* BooksListView.swift */,
+				B0A9521C2DC521680079D3BC /* BookList.swift */,
 				B01C66082DC13EA7003BA5DB /* NewBookView.swift */,
 				B08A41452DC2B89F00CCE664 /* BookDetailView.swift */,
 			);
@@ -209,6 +212,7 @@
 				B023ACBF2DC3EC5E008049FA /* SampleBooks.swift in Sources */,
 				B01C66092DC13EA7003BA5DB /* NewBookView.swift in Sources */,
 				B023ACBB2DC3E23F008049FA /* RatingsView.swift in Sources */,
+				B0A9521D2DC521680079D3BC /* BookList.swift in Sources */,
 				B01C66052DC13E5D003BA5DB /* BookModel.swift in Sources */,
 				B08A41462DC2B89F00CCE664 /* BookDetailView.swift in Sources */,
 				B01C66012DC13E34003BA5DB /* BooksReadApp.swift in Sources */,
