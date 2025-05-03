@@ -17,9 +17,10 @@ struct BookDetailView: View {
   @State private var dateAdded: Date = Date.distantPast
   @State private var dateStarted: Date = Date.distantPast
   @State private var dateCompleted: Date = Date.distantPast
-  @State private var summary: String = ""
+  @State private var synopsis: String = "" 
   @State private var rating: Int = 0
   @State private var status: Status = Status.onShelf
+  @State private var recommendedBy: String = ""
   
   let book: BookModel
   
@@ -102,17 +103,32 @@ struct BookDetailView: View {
           .foregroundStyle(.secondary)
       }
       
+      LabeledContent {
+        TextField("", text: $recommendedBy)
+      } label: {
+        Text("Recommended By")
+          .foregroundStyle(.secondary)
+      }
+      
       Divider()
       
-      Text("Summary")
+      Text("Synopsis")
         .foregroundStyle(.secondary)
       
-      TextEditor(text: $summary)
+      TextEditor(text: $synopsis)
         .padding(5)
         .overlay {
           RoundedRectangle(cornerRadius: 20)
             .stroke(Color(uiColor: .tertiarySystemFill), lineWidth: 2)
         }
+      
+      NavigationLink(value: book) {
+        let count = book.quotes?.count ?? 0
+        Label("^[\(count) Quotes](inflect: true)", systemImage: "quote.opening")
+      }
+      .frame(maxWidth: .infinity, alignment: .trailing)
+      .buttonStyle(.bordered)
+      .padding(.horizontal)
     }
     .padding()
     .textFieldStyle(.roundedBorder)
@@ -121,10 +137,11 @@ struct BookDetailView: View {
       rating = book.rating ?? 0
       title = book.title
       author = book.author
-      summary = book.summary
+      synopsis = book.synopsis
       dateAdded = book.dateAdded
       dateStarted = book.dateStarted
       dateCompleted = book.dateCompleted
+      recommendedBy = book.recommendedBy
     })
     .navigationTitle(title)
     .navigationBarTitleDisplayMode(.inline)
@@ -136,15 +153,19 @@ struct BookDetailView: View {
             book.rating = rating
             book.title = title
             book.author = author
-            book.summary = summary
+            book.synopsis = synopsis
             book.dateAdded = dateAdded
             book.dateStarted = dateStarted
             book.dateCompleted = dateCompleted
+            book.recommendedBy = recommendedBy
             dismiss()
           }
           .animation(.easeInOut, value: changed)
         }
       }
+    }
+    .navigationDestination(for: BookModel.self) { book in
+      QuoteListView(book: book)
     }
   }
   
@@ -154,10 +175,11 @@ struct BookDetailView: View {
     || rating != book.rating ?? 0
     || title != book.title
     || author != book.author
-    || summary != book.summary
+    || synopsis != book.synopsis
     || dateAdded != book.dateAdded
     || dateStarted != book.dateStarted
     || dateCompleted != book.dateCompleted
+    || recommendedBy != book.recommendedBy
   }
 }
 

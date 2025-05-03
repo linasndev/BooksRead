@@ -15,9 +15,15 @@ class BookModel {
   var dateAdded: Date
   var dateStarted: Date
   var dateCompleted: Date
-  var summary: String
+  @Attribute(originalName: "summary") var synopsis: String //Light Weight migration
   var rating: Int?
   var status: Status.RawValue
+  var recommendedBy: String = ""
+  
+  //One To Many Relationship - One Book can have many Quote's - Explicit
+  @Relationship(deleteRule: .cascade, inverse: \QuoteModel.book) var quotes: [QuoteModel]?
+  
+  
   
   init(
     title: String,
@@ -27,16 +33,18 @@ class BookModel {
     dateCompleted: Date = Date.distantPast,
     summary: String = "",
     rating: Int? = nil,
-    status: Status = .onShelf
+    status: Status = .onShelf,
+    recommendedBy: String = ""
   ) {
     self.title = title
     self.author = author
     self.dateAdded = dateAdded
     self.dateStarted = dateStarted
     self.dateCompleted = dateCompleted
-    self.summary = summary
+    self.synopsis = summary
     self.rating = rating
     self.status = status.rawValue
+    self.recommendedBy = recommendedBy
   }
   
   var icon: Image {
@@ -85,7 +93,7 @@ enum Status: Int, Codable, Identifiable, CaseIterable {
 //      dateAdded: Calendar.current.date(byAdding: .day, value: -90, to: Date.now)!,
 //      dateStarted: Calendar.current.date(byAdding: .day, value: -60, to: Date.now)!,
 //      dateCompleted: Calendar.current.date(byAdding: .day, value: -45, to: Date.now)!,
-//      summary: "A novel about regret, possibility, and making choices. Protagonist Nora Seed finds herself in a library between life and death with infinite books containing different versions of her life.",
+//      synopsis: "A novel about regret, possibility, and making choices. Protagonist Nora Seed finds herself in a library between life and death with infinite books containing different versions of her life.",
 //      rating: 4,
 //      status: .completed
 //    )
@@ -96,7 +104,7 @@ enum Status: Int, Codable, Identifiable, CaseIterable {
 //      author: "Andy Weir",
 //      dateAdded: Calendar.current.date(byAdding: .day, value: -120, to: Date.now)!,
 //      dateStarted: Calendar.current.date(byAdding: .day, value: -30, to: Date.now)!,
-//      summary: "A lone astronaut must save Earth from an extinction-level threat with nothing but his ingenuity and remnants of his memory.",
+//      synopsis: "A lone astronaut must save Earth from an extinction-level threat with nothing but his ingenuity and remnants of his memory.",
 //      status: .inProgress
 //    )
 //    container.mainContext.insert(projectHailBook)
@@ -105,7 +113,7 @@ enum Status: Int, Codable, Identifiable, CaseIterable {
 //      title: "Tomorrow, and Tomorrow, and Tomorrow",
 //      author: "Gabrielle Zevin",
 //      dateAdded: Calendar.current.date(byAdding: .day, value: -15, to: Date.now)!,
-//      summary: "A novel spanning thirty years, following two friends who collaborate on video game design while navigating their complex relationship.",
+//      synopsis: "A novel spanning thirty years, following two friends who collaborate on video game design while navigating their complex relationship.",
 //      status: .onShelf
 //    )
 //    container.mainContext.insert(tomorrowBook)
@@ -116,7 +124,7 @@ enum Status: Int, Codable, Identifiable, CaseIterable {
 //      dateAdded: Calendar.current.date(byAdding: .day, value: -200, to: Date.now)!,
 //      dateStarted: Calendar.current.date(byAdding: .day, value: -180, to: Date.now)!,
 //      dateCompleted: Calendar.current.date(byAdding: .day, value: -150, to: Date.now)!,
-//      summary: "Told from the perspective of an Artificial Friend named Klara, this novel explores what it means to love in a technologically advanced world that's becoming increasingly dehumanized.",
+//      synopsis: "Told from the perspective of an Artificial Friend named Klara, this novel explores what it means to love in a technologically advanced world that's becoming increasingly dehumanized.",
 //      rating: 5,
 //      status: .completed
 //    )
@@ -127,7 +135,7 @@ enum Status: Int, Codable, Identifiable, CaseIterable {
 //      author: "Emily St. John Mandel",
 //      dateAdded: Calendar.current.date(byAdding: .day, value: -45, to: Date.now)!,
 //      dateStarted: Calendar.current.date(byAdding: .day, value: -40, to: Date.now)!,
-//      summary: "A novel that weaves together characters and stories across time and space, from Vancouver Island in 1912 to a moon colony 500 years later.",
+//      synopsis: "A novel that weaves together characters and stories across time and space, from Vancouver Island in 1912 to a moon colony 500 years later.",
 //      status: .inProgress
 //    )
 //    container.mainContext.insert(seaBook)
@@ -136,7 +144,7 @@ enum Status: Int, Codable, Identifiable, CaseIterable {
 //      title: "The Three-Body Problem",
 //      author: "Liu Cixin",
 //      dateAdded: Calendar.current.date(byAdding: .day, value: -10, to: Date.now)!,
-//      summary: "Set against the backdrop of China's Cultural Revolution, this sci-fi novel explores humanity's first contact with an alien civilization that's on the brink of destruction.",
+//      synopsis: "Set against the backdrop of China's Cultural Revolution, this sci-fi novel explores humanity's first contact with an alien civilization that's on the brink of destruction.",
 //      status: .onShelf
 //    )
 //    container.mainContext.insert(threeBodyBook)
