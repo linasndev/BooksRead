@@ -23,6 +23,9 @@ class BookModel {
   //One To Many Relationship - One Book can have many Quote's - Explicit
   @Relationship(deleteRule: .cascade, inverse: \QuoteModel.book) var quotes: [QuoteModel]?
   
+  //Many To Many Relationships - Many Genres can have many Books, or many Books can have many Genres
+  @Relationship(deleteRule: .nullify, inverse: \GenreModel.books) var genres: [GenreModel]?
+  
   
   
   init(

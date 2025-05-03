@@ -31,9 +31,6 @@ struct BooksListView: View {
           .searchable(text: $searchText)
       }
       .navigationTitle("My Books")
-      .navigationDestination(for: BookModel.self, destination: { book in
-        BookDetailView(book: book)
-      })
       .toolbar {
         Button {
           isPresentedNewBookSheet.toggle()
@@ -54,7 +51,9 @@ struct BooksListView: View {
 #Preview {
   let preview = Preview(model: BookModel.self)
   let books = BookModel.sampleBooks
+  let genres = GenreModel.sampleGenres
   preview.addExamples(books)
+  preview.addExamples(genres)
   return BooksListView()
     .modelContainer(preview.container)
 }

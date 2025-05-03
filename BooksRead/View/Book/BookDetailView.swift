@@ -17,10 +17,14 @@ struct BookDetailView: View {
   @State private var dateAdded: Date = Date.distantPast
   @State private var dateStarted: Date = Date.distantPast
   @State private var dateCompleted: Date = Date.distantPast
-  @State private var synopsis: String = "" 
+  @State private var synopsis: String = ""
   @State private var rating: Int = 0
   @State private var status: Status = Status.onShelf
   @State private var recommendedBy: String = ""
+  
+  @State private var isPresentedGenresListView: Bool = false
+  @State private var isPresentedQuotesListView: Bool = false
+  
   
   let book: BookModel
   
@@ -122,9 +126,23 @@ struct BookDetailView: View {
             .stroke(Color(uiColor: .tertiarySystemFill), lineWidth: 2)
         }
       
-      NavigationLink(value: book) {
-        let count = book.quotes?.count ?? 0
-        Label("^[\(count) Quotes](inflect: true)", systemImage: "quote.opening")
+      if let genres = book.genres {
+        ViewThatFits {
+          ScrollView(.horizontal) {
+            GenresStackView(genres: genres)
+          }
+          .scrollIndicators(.hidden)
+        }
+      }
+      
+      HStack {
+        Button("Genres", systemImage: "bookmark.fill") {
+          isPresentedGenresListView.toggle()
+        }
+        
+        Button("^[\(book.quotes?.count ?? 0) Quotes](inflect: true)", systemImage: "quote.opening") {
+          isPresentedQuotesListView.toggle()
+        }
       }
       .frame(maxWidth: .infinity, alignment: .trailing)
       .buttonStyle(.bordered)
@@ -164,8 +182,13 @@ struct BookDetailView: View {
         }
       }
     }
-    .navigationDestination(for: BookModel.self) { book in
+    .popover(isPresented: $isPresentedQuotesListView) {
       QuoteListView(book: book)
+        .presentationCompactAdaptation(.sheet)
+    }
+    .popover(isPresented: $isPresentedGenresListView) {
+      GenresListView(book: book)
+        .presentationCompactAdaptation(.sheet)
     }
   }
   
@@ -189,11 +212,11 @@ struct BookDetailView: View {
     BookDetailView(book: BookModel.sampleBooks[3])
       .modelContainer(preview.container)
   }
-//  let container = BookModel.preview
-//  let fetchDescriptor = FetchDescriptor<BookModel>()
-//  let book = try! container.mainContext.fetch(fetchDescriptor)[0]
-//  return NavigationStack {
-//    BookDetailView(book: book)
-//      .modelContainer(container)
-//  }
+  //  let container = BookModel.preview
+  //  let fetchDescriptor = FetchDescriptor<BookModel>()
+  //  let book = try! container.mainContext.fetch(fetchDescriptor)[0]
+  //  return NavigationStack {
+  //    BookDetailView(book: book)
+  //      .modelContainer(container)
+  //  }
 }

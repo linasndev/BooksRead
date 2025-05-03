@@ -46,7 +46,9 @@ struct BookList: View {
     } else {
       List {
         ForEach(books) { book in
-          NavigationLink(value: book) {
+          NavigationLink {
+            BookDetailView(book: book)
+          } label: {
             HStack {
               book.icon
               
@@ -65,9 +67,19 @@ struct BookList: View {
                     }
                   }
                 }
+                
+                if let genres = book.genres {
+                  ViewThatFits {
+                    ScrollView(.horizontal) {
+                      GenresStackView(genres: genres)
+                    }
+                    .scrollIndicators(.hidden)
+                  }
+                }
               }
             }
           }
+
         }
         .onDelete { indexSet in
           indexSet.forEach { index in
