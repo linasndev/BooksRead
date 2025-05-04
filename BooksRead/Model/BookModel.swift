@@ -10,14 +10,14 @@ import SwiftData
 
 @Model
 class BookModel {
-  var title: String
-  var author: String
-  var dateAdded: Date
-  var dateStarted: Date
-  var dateCompleted: Date
-  @Attribute(originalName: "summary") var synopsis: String //Light Weight migration
+  var title: String = ""
+  var author: String = ""
+  var dateAdded: Date = Date.now
+  var dateStarted: Date = Date.distantPast
+  var dateCompleted: Date = Date.distantPast
+  @Attribute(originalName: "summary") var synopsis: String = "" //Light Weight migration
   var rating: Int?
-  var status: Status.RawValue
+  var status: Status.RawValue = Status.onShelf.rawValue
   var recommendedBy: String = ""
   
   //One To Many Relationship - One Book can have many Quote's - Explicit

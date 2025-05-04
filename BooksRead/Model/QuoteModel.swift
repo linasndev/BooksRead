@@ -11,7 +11,7 @@ import SwiftData
 @Model
 class QuoteModel {
   var creationDate: Date = Date.now
-  var text: String
+  var text: String = ""
   var page: String?
   var book: BookModel? //It's associated with just ONE BookModel.
   

@@ -12,6 +12,8 @@ struct BookDetailView: View {
   
   @Environment(\.dismiss) private var dismiss
   
+  @State private var status: Status
+  
   @State private var title: String = ""
   @State private var author: String = ""
   @State private var dateAdded: Date = Date.distantPast
@@ -19,14 +21,17 @@ struct BookDetailView: View {
   @State private var dateCompleted: Date = Date.distantPast
   @State private var synopsis: String = ""
   @State private var rating: Int = 0
-  @State private var status: Status = Status.onShelf
   @State private var recommendedBy: String = ""
   
   @State private var isPresentedGenresListView: Bool = false
   @State private var isPresentedQuotesListView: Bool = false
   
-  
   let book: BookModel
+  
+  init(book: BookModel) {
+    self.book = book
+    _status = State(initialValue: Status(rawValue: book.status) ?? Status.onShelf)
+  }
   
   var body: some View {
     HStack {
@@ -42,7 +47,12 @@ struct BookDetailView: View {
     VStack(alignment: .leading) {
       GroupBox {
         LabeledContent {
-          DatePicker("", selection: $dateAdded, displayedComponents: .date)
+          switch status {
+          case .onShelf:
+            DatePicker("", selection: $dateAdded, displayedComponents: .date)
+          case .inProgress, .completed:
+            DatePicker("", selection: $dateAdded, in: ...dateStarted, displayedComponents: .date)
+          }
         } label: {
           Text("Date Added")
         }
@@ -151,7 +161,6 @@ struct BookDetailView: View {
     .padding()
     .textFieldStyle(.roundedBorder)
     .onAppear(perform: {
-      status = Status(rawValue: book.status) ?? Status.onShelf
       rating = book.rating ?? 0
       title = book.title
       author = book.author

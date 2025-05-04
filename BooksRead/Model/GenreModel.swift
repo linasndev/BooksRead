@@ -11,7 +11,7 @@ import SwiftData
 @Model
 class GenreModel {
   var name: String = ""
-  var color: String
+  var color: String = "FFFFFF"
   var books: [BookModel]?
   
   init(name: String, color: String) {
