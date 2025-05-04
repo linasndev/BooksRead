@@ -7,6 +7,7 @@
 
 import SwiftUI
 import SwiftData
+import PhotosUI
 
 struct BookDetailView: View {
   
@@ -25,6 +26,9 @@ struct BookDetailView: View {
   
   @State private var isPresentedGenresListView: Bool = false
   @State private var isPresentedQuotesListView: Bool = false
+  
+  @State private var selectedBookCover: PhotosPickerItem?
+  @State private var selectedBookCoverData: Data?
   
   let book: BookModel
   
@@ -97,24 +101,55 @@ struct BookDetailView: View {
       Divider()
       
       
-      LabeledContent {
-        RatingsView(maxRating: 5, currentRating: $rating, width: 30)
-      } label: {
-        Text("Rating")
-      }
-      
-      LabeledContent {
-        TextField("", text: $title)
-      } label: {
-        Text("Title")
-          .foregroundStyle(.secondary)
-      }
-      
-      LabeledContent {
-        TextField("", text: $author)
-      } label: {
-        Text("Author")
-          .foregroundStyle(.secondary)
+      HStack {
+        
+        PhotosPicker(selection: $selectedBookCover, matching: .images, photoLibrary: .shared()) {
+          Group {
+            if let selectedBookCoverData, let uiImage = UIImage(data: selectedBookCoverData) {
+              Image(uiImage: uiImage)
+                .resizable()
+                .scaledToFit()
+            } else {
+              Image(systemName: "photo")
+                .resizable()
+                .scaledToFit()
+            }
+          }
+          .frame(width: 75, height: 100)
+          .overlay(alignment: .bottomTrailing) {
+            if selectedBookCoverData != nil {
+              Button {
+                selectedBookCover = nil
+                selectedBookCoverData = nil
+              } label: {
+                Image(systemName: "x.circle.fill")
+                  .foregroundStyle(.red)
+              }
+            }
+          }
+        }
+        
+        VStack {
+          LabeledContent {
+            RatingsView(maxRating: 5, currentRating: $rating, width: 30)
+          } label: {
+            Text("Rating")
+          }
+          
+          LabeledContent {
+            TextField("", text: $title)
+          } label: {
+            Text("Title")
+              .foregroundStyle(.secondary)
+          }
+          
+          LabeledContent {
+            TextField("", text: $author)
+          } label: {
+            Text("Author")
+              .foregroundStyle(.secondary)
+          }
+        }
       }
       
       LabeledContent {
@@ -156,10 +191,12 @@ struct BookDetailView: View {
       }
       .frame(maxWidth: .infinity, alignment: .trailing)
       .buttonStyle(.bordered)
-      .padding(.horizontal)
+      .padding()
     }
     .padding()
     .textFieldStyle(.roundedBorder)
+    .navigationTitle(title)
+    .navigationBarTitleDisplayMode(.inline)
     .onAppear(perform: {
       rating = book.rating ?? 0
       title = book.title
@@ -169,9 +206,13 @@ struct BookDetailView: View {
       dateStarted = book.dateStarted
       dateCompleted = book.dateCompleted
       recommendedBy = book.recommendedBy
+      selectedBookCoverData = book.bookCover
     })
-    .navigationTitle(title)
-    .navigationBarTitleDisplayMode(.inline)
+    .task(id: selectedBookCover) {
+      if let data = try? await selectedBookCover?.loadTransferable(type: Data.self) {
+        selectedBookCoverData = data
+      }
+    }
     .toolbar {
       ToolbarItem(placement: .topBarTrailing) {
         if changed {
@@ -185,6 +226,7 @@ struct BookDetailView: View {
             book.dateStarted = dateStarted
             book.dateCompleted = dateCompleted
             book.recommendedBy = recommendedBy
+            book.bookCover = selectedBookCoverData
             dismiss()
           }
           .animation(.easeInOut, value: changed)
@@ -212,6 +254,7 @@ struct BookDetailView: View {
     || dateStarted != book.dateStarted
     || dateCompleted != book.dateCompleted
     || recommendedBy != book.recommendedBy
+    || selectedBookCoverData != book.bookCover
   }
 }
 

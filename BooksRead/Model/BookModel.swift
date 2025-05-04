@@ -19,6 +19,7 @@ class BookModel {
   var rating: Int?
   var status: Status.RawValue = Status.onShelf.rawValue
   var recommendedBy: String = ""
+  @Attribute(.externalStorage) var bookCover: Data? //Store image data
   
   //One To Many Relationship - One Book can have many Quote's - Explicit
   @Relationship(deleteRule: .cascade, inverse: \QuoteModel.book) var quotes: [QuoteModel]?
